@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Until Day-1 Counter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .counters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .counter-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .counter-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .counter-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .time-unit {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .time-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .time-label {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .separator {
+            font-size: 2rem;
+            font-weight: bold;
+            align-self: center;
+            opacity: 0.7;
+        }
+
+        .expired {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #ffeb3b;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .counter-card {
+                padding: 20px;
+            }
+            
+            .time-number {
+                font-size: 2rem;
+            }
+            
+            .countdown {
+                gap: 15px;
+            }
+            
+            .time-unit {
+                min-width: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
+                gap: 10px;
+            }
+            
+            .time-number {
+                font-size: 1.5rem;
+            }
+            
+            .time-unit {
+                min-width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Days Until Day-1</h1>
+        <div class="subtitle">Live Countdown Timer</div>
+    </div>
+
+    <div class="counters-container">
+        <div class="counter-card">
+            <div class="counter-title">Days Until November 10, 2025</div>
+            <div id="countdown1" class="countdown"></div>
+        </div>
+
+        <div class="counter-card">
+            <div class="counter-title">Days Until December 1, 2025</div>
+            <div id="countdown2" class="countdown"></div>
+        </div>
+
+        <div class="counter-card">
+            <div class="counter-title">Days Until January 1, 2026</div>
+            <div id="countdown3" class="countdown"></div>
+        </div>
+    </div>
+
+    <script>
+        // Target dates
+        const targetDates = [
+            { id: 'countdown1', date: new Date('2025-11-10T00:00:00'), title: 'November 10, 2025' },
+            { id: 'countdown2', date: new Date('2025-12-01T00:00:00'), title: 'December 1, 2025' },
+            { id: 'countdown3', date: new Date('2026-01-01T00:00:00'), title: 'January 1, 2026' }
+        ];
+
+        function updateCountdown(targetDate, elementId) {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const element = document.getElementById(elementId);
+
+            if (distance < 0) {
+                element.innerHTML = '<div class="expired">This date has passed!</div>';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            element.innerHTML = `
+                <div class="time-unit">
+                    <span class="time-number">${days}</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-number">${hours.toString().padStart(2, '0')}</span>
+                    <span class="time-label">Hours</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-number">${minutes.toString().padStart(2, '0')}</span>
+                    <span class="time-label">Minutes</span>
+                </div>
+                <div class="separator">:</div>
+                <div class="time-unit">
+                    <span class="time-number">${seconds.toString().padStart(2, '0')}</span>
+                    <span class="time-label">Seconds</span>
+                </div>
+            `;
+        }
+
+        function updateAllCountdowns() {
+            targetDates.forEach(target => {
+                updateCountdown(target.date.getTime(), target.id);
+            });
+        }
+
+        // Update immediately
+        updateAllCountdowns();
+
+        // Update every second
+        setInterval(updateAllCountdowns, 1000);
+    </script>
+</body>
+</html>
